@@ -14,4 +14,14 @@ This is a quick and dirty fork of the great smcFanController application. Instea
 * 75 C: 5500 RPM
 * 80 C: 6000 RPM
 
-The values can be customized in FanControl.h. Use only at your own risk.
+The values can be customized in FanControl.h. The following settings may be easier on the fans.
+
+```objective-c
+#define kBaseTemp 70 // The temperature resulting with the lowest RPM
+#define kBaseRpm 2000 // The lowest RPM. Warning: This should never be less than 2000.
+#define kTempIncrement 5 // How much should the temperature increase before we increase RPM
+#define kRpmIncrement 1000 // How much should the RPM be incremented
+#define kMaxMultiplier 4 // How many times will the RPM be incremented at maximum
+```
+
+Note: Use only at your own risk.
