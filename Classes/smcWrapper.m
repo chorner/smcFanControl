@@ -173,7 +173,7 @@ static NSDictionary *tsensors = nil;
 	//first check if it's the right binary (security)
 	NSString *checksum=[smcWrapper createCheckSum:launchPath];
 	if (![checksum  isEqualToString:smc_checksum]) {
-		NSLog(@"smcFanControl: Security Error: smc-binary is not the distributed one");
+//		NSLog(@"smcFanControl: Security Error: smc-binary is not the distributed one");
 		//return;
 	}
     NSArray *argsArray = [NSArray arrayWithObjects: @"-k",key,@"-w",value,nil];

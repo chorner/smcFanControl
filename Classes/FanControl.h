@@ -37,6 +37,14 @@
 
 #define kMenuBarHeight				22
 
+#define kBaseTemp 50 // The temperature resulting with the lowest RPM
+#define kBaseRpm 3000 // The lowest RPM. Warning: This should never be less than 2000.
+#define kTempIncrement 5 // How much should the temperature increase before we increase RPM
+#define kRpmIncrement 500 // How much should the RPM be incremented
+#define kMaxMultiplier 6
+
+#define kPastTempRatio 0.67 // The weight we put to past values to avoid too quick fluctuations
+#define kTempDecreaseLimiter 2.5 // How much lower should the new temperature be before we lower the RPM. Again to avoid too quick fluctuations.
 
 @interface FanControl : NSObject
 

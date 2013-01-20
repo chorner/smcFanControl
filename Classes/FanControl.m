@@ -48,8 +48,8 @@ OSStatus status;
 NSDictionary* machine_defaults;
 NSString *authpw;
 
-int current_fav = 0;
-int default_fav = 0;
+int rpm_multiplier = 0;
+float past_temp = kBaseTemp;
 
 
 
@@ -216,7 +216,7 @@ int default_fav = 0;
 		[autochange setEnabled:false];
 	}
 	[faqText replaceCharactersInRange:NSMakeRange(0,0) withRTF: [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"F.A.Q" ofType:@"rtf"]]];
-	[self apply_settings:nil controllerindex:[[defaults objectForKey:@"SelDefault"] intValue]];
+	[self apply_settings:nil controllerindex:0];
 	[[[[theMenu itemWithTag:1] submenu] itemAtIndex:[[defaults objectForKey:@"SelDefault"] intValue]] setState:NSOnState];
 	[[sliderCell dataCell] setControlSize:NSSmallControlSize];
 	[self changeMenu:nil];
@@ -310,7 +310,6 @@ int default_fav = 0;
 }
 
 - (IBAction)favorite_selected:(id)sender {
-    default_fav = [FavoritesController selectionIndex];
 }
 
 
@@ -414,7 +413,26 @@ int default_fav = 0;
 		[s_status release];
 		
 	}
-  
+    
+    past_temp = past_temp * kPastTempRatio + c_temp * (1 - kPastTempRatio);
+    int expectedTemp = kBaseTemp + rpm_multiplier * kTempIncrement;
+    int new_multiplier = (int)((past_temp - kBaseTemp) / kTempIncrement);
+    if (new_multiplier < 0) {
+        new_multiplier = 0;
+    }
+    if (new_multiplier > kMaxMultiplier) {
+        new_multiplier = kMaxMultiplier;
+    }
+    if (past_temp < expectedTemp - kTempDecreaseLimiter) {
+        NSLog(@"Less: Multiplier %d ExpectedTemp %d NewTemp %0.2f NewMultiplier %d", rpm_multiplier, expectedTemp, past_temp, new_multiplier);
+        rpm_multiplier = new_multiplier;
+        [self apply_settings:nil controllerindex:rpm_multiplier];
+    } else if (past_temp > expectedTemp + kTempIncrement) {
+        NSLog(@"More: Multiplier %d ExpectedTemp %d NewTemp %0.2f NewMultiplier %d", rpm_multiplier, expectedTemp, past_temp, new_multiplier);
+        rpm_multiplier = new_multiplier;
+        [self apply_settings:nil controllerindex:rpm_multiplier];
+    }
+    /*
 	if (c_temp > [[defaults objectForKey:@"MinTemp"] floatValue]) {
         if (current_fav != [[defaults objectForKey:@"SelMinTemp"] intValue]) {
             [self apply_settings:nil controllerindex:[[defaults objectForKey:@"SelMinTemp"] intValue]];
@@ -426,6 +444,7 @@ int default_fav = 0;
             current_fav = default_fav;
         }
     }
+     */
 }
 
 
@@ -434,7 +453,6 @@ int default_fav = 0;
 	[defaults setValue:[FavoritesController content] forKey:@"Favorites"];
 	[defaults synchronize];
 	[mainwindow close];
-	[self apply_settings:sender controllerindex:[FavoritesController selectionIndex]];
 	undo_dic=[NSDictionary dictionaryWithDictionary:[defaults dictionaryRepresentation]];
 }
 
@@ -449,31 +467,10 @@ int default_fav = 0;
 //set the new fan settings
 
 -(void)apply_settings:(id)sender controllerindex:(int)cIndex{
-	int i;
-	[FanControl setRights];
-	[FavoritesController setSelectionIndex:cIndex];
-	for (i=0;i<[[[[FavoritesController arrangedObjects] objectAtIndex:cIndex] objectForKey:@"FanData"] count];i++) {
-		[smcWrapper setKey_external:[NSString stringWithFormat:@"F%dMn",i] value:[[[[FanController arrangedObjects] objectAtIndex:i] objectForKey:@"selspeed"] tohex]];
-	}
-	NSMenu *submenu = [[[NSMenu alloc] init] autorelease];
-	
-	for(i=0;i<[[FavoritesController arrangedObjects] count];i++){
-		NSMenuItem *submenuItem = [[[NSMenuItem alloc] initWithTitle:[[[FavoritesController arrangedObjects] objectAtIndex:i] objectForKey:@"Title"] action:@selector(apply_quickselect:) keyEquivalent:@""] autorelease];
-		[submenuItem setTag:i*100]; //for later manipulation
-		[submenuItem setEnabled:YES];
-		[submenuItem setTarget:self];
-		[submenuItem setRepresentedObject:[[FavoritesController arrangedObjects] objectAtIndex:i]];
-		[submenu addItem:submenuItem];
-	}
-	
-	[[theMenu itemWithTag:1] setSubmenu:submenu];
-	for (i=0;i<[[[theMenu itemWithTag:1] submenu] numberOfItems];i++) {
-		[[[[theMenu itemWithTag:1] submenu] itemAtIndex:i] setState:NSOffState];
-	}
-	[[[[theMenu itemWithTag:1] submenu] itemAtIndex:cIndex] setState:NSOnState];
-	[defaults setObject:[NSNumber numberWithInt:cIndex] forKey:@"SelDefault"];
-	//change active setting display
-	[[theMenu itemWithTag:1] setTitle:[NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"Active Setting",nil),[ [ [FavoritesController arrangedObjects] objectAtIndex:[FavoritesController selectionIndex]] objectForKey:@"Title"] ]];
+    NSNumber *rpm = [NSNumber numberWithInt:(kBaseRpm + cIndex * kRpmIncrement)];
+    NSLog(@"Fans changed to %d", rpm.intValue);
+    [smcWrapper setKey_external:@"F0Mn" value:[rpm tohex]];
+    [smcWrapper setKey_external:@"F1Mn" value:[rpm tohex]];
 }
 
 
@@ -487,7 +484,6 @@ int default_fav = 0;
 	}
 	[sender setState:NSOnState];
 	[[theMenu itemWithTag:1] setTitle:[NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"Active Setting",nil),[sender title]]];
-	[self apply_settings:sender controllerindex:[[[theMenu itemWithTag:1] submenu] indexOfItem:sender]];
 }
 
 
@@ -574,33 +570,16 @@ int default_fav = 0;
 #pragma mark **Power Watchdog-Methods**
 
 - (void)systemDidWakeFromSleep:(id)sender{
-	[self apply_settings:nil controllerindex:[[defaults objectForKey:@"SelDefault"] intValue]];
 }
 
 
 - (void)powerChangeToBattery:(id)sender{
-
-	if ([[defaults objectForKey:@"AutomaticChange"] boolValue]==YES) {
-		[self apply_settings:nil controllerindex:[[defaults objectForKey:@"selbatt"] intValue]];
-    default_fav = [[defaults objectForKey:@"selbatt"] intValue];
-    current_fav = [[defaults objectForKey:@"selbatt"] intValue];
-	}
 }
 
 - (void)powerChangeToAC:(id)sender{
-	if ([[defaults objectForKey:@"AutomaticChange"] boolValue]==YES) {
-		[self apply_settings:nil controllerindex:[[defaults objectForKey:@"selac"] intValue]];
-    default_fav = [[defaults objectForKey:@"selac"] intValue];
-    current_fav = [[defaults objectForKey:@"selac"] intValue];
-	}
 }
 
 - (void)powerChangeToACLoading:(id)sender{
-	if ([[defaults objectForKey:@"AutomaticChange"] boolValue]==YES) {
-		[self apply_settings:nil controllerindex:[[defaults objectForKey:@"selload"] intValue]];
-    default_fav = [[defaults objectForKey:@"selload"] intValue];
-    current_fav = [[defaults objectForKey:@"selload"] intValue];
-	}	
 }
 
 

@@ -77,7 +77,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		89033CA10B80E1DF00FDAF43 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/F.A.Q.rtf; sourceTree = "<group>"; };
-		89033D900B80F61E00FDAF43 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = German; path = German.lproj/F.A.Q.rtf; sourceTree = "<group>"; };
 		89148EA115E2543D00A073EE /* NSFileManager+DirectoryLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryLocations.m"; sourceTree = "<group>"; };
 		89148EA215E2543D00A073EE /* NSFileManager+DirectoryLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryLocations.h"; sourceTree = "<group>"; };
 		891682780AEBB14F00888535 /* StatusItemWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusItemWindow.h; sourceTree = "<group>"; };
@@ -92,18 +91,10 @@
 		892A7F440B10B7700041B493 /* MachineDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MachineDefaults.m; sourceTree = "<group>"; };
 		8932CF2213D0850F008BC447 /* SystemVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemVersion.h; sourceTree = "<group>"; };
 		8932CF2313D08551008BC447 /* SystemVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemVersion.m; sourceTree = "<group>"; };
-		8932CFF813D08DC4008BC447 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Dutch.lproj/F.A.Q.rtf; sourceTree = "<group>"; };
-		8932CFF913D08DD7008BC447 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
-		8932CFFA13D08DDF008BC447 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Dutch.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		893506130B440249001BFBA5 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
-		8935061B0B440264001BFBA5 /* German */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		894A465F0ADBD6CF008785F3 /* FanControl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FanControl.h; sourceTree = "<group>"; };
 		894A46600ADBD6CF008785F3 /* FanControl.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FanControl.m; sourceTree = "<group>"; };
 		894A494A0ADBEEF4008785F3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
-		894DC9E20F8AA367006A046F /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Spanish.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		894DC9E30F8AA36F006A046F /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Spanish; path = Spanish.lproj/F.A.Q.rtf; sourceTree = "<group>"; };
-		894DC9E40F8AA37C006A046F /* Spanish */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Spanish; path = Spanish.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		894DC9E60F8AA399006A046F /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		89559A830BAC338400DBA37E /* smcover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smcover.png; sourceTree = "<group>"; };
 		895BDA390B8F8F42003CD894 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		8985F1580ADD0B5500F9EC46 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -117,7 +108,6 @@
 		89E7D3640ADE819B000F67AB /* Machines.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Machines.plist; sourceTree = "<group>"; };
 		89FE24050B7F4C2B00D2713C /* paypal.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = paypal.gif; sourceTree = "<group>"; };
 		89FE24220B7F4CD300D2713C /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		89FE24280B7F4CE900D2713C /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = German.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* smcFanControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = smcFanControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -304,7 +294,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "smcFanControl" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -382,7 +372,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				089C165DFE840E0CC02AAC07 /* English */,
-				894DC9E40F8AA37C006A046F /* Spanish */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -391,9 +380,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				89033CA10B80E1DF00FDAF43 /* English */,
-				89033D900B80F61E00FDAF43 /* German */,
-				894DC9E30F8AA36F006A046F /* Spanish */,
-				8932CFF813D08DC4008BC447 /* Dutch */,
 			);
 			name = F.A.Q.rtf;
 			sourceTree = "<group>";
@@ -402,9 +388,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				893506130B440249001BFBA5 /* English */,
-				8935061B0B440264001BFBA5 /* German */,
-				894DC9E60F8AA399006A046F /* Spanish */,
-				8932CFF913D08DD7008BC447 /* Dutch */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -413,9 +396,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				89FE24220B7F4CD300D2713C /* English */,
-				89FE24280B7F4CE900D2713C /* German */,
-				894DC9E20F8AA367006A046F /* Spanish */,
-				8932CFFA13D08DDF008BC447 /* Dutch */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -438,14 +418,14 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = CMD_TOOL;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -462,13 +442,13 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = CMD_TOOL;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -487,7 +467,7 @@
 				GCC_MODEL_PPC64 = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -499,7 +479,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = smcFanControl;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -519,7 +499,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = "";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = NO;
 				INFOPLIST_FILE = Info.plist;
@@ -531,7 +511,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = smcFanControl;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -548,7 +528,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-fnested-functions";
 				OTHER_LDFLAGS = "";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
@@ -564,7 +544,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-fnested-functions";
 				OTHER_LDFLAGS = "";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				SYMROOT = "~/builds";
 				VALID_ARCHS = "i386 x86_64";
 			};
