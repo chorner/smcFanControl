@@ -1,12 +1,20 @@
-smcFanControl
-=============
 
-smcFanControl lets the user set the minimum speed of the build-in fans. So you can increase your minimum fan speed to make your Intel Mac run cooler. However in order not to damage your machines smcFanControl doesn't let you set a minimum speed to a value below Apple's defaults.
+The Goal of This Fork
+=====================
+To automatically adjust the fan speed based on the CPU temperature.
 
-![My image](https://dl.dropbox.com/u/363242/screenshots/smc_screenshot.png)
+Background
+==========
+My old MacBook Pro has an overheating problem and for some reason the fans stay at 2000 RPM until the CPU temperature is over 100 Celsius. 
 
-Requirements: Intel Mac / OS X 10.5 or higher 
+This is a quick and dirty fork of the great smcFanController application. Instead of relying on user-defined favorites, it dynamically adjusts the fan speed based on the CPU temperature as follows:
 
-Compiled version: http://www.eidac.de/smcfancontrol/smcfancontrol_2_4.zip
+50 C: 3000 RPM
+55 C: 3500 RPM
+60 C: 4000 RPM
+65 C: 4500 RPM
+70 C: 5000 RPM
+75 C: 5500 RPM
+80 C: 6000 RPM
 
-License: GPL 2
+The values can be customized in FanControl.h
