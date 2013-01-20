@@ -1,10 +1,7 @@
+## The Goal of This Fork
+A version of smcFanControl that automatically adjusts the fan speed based on the CPU temperature.
 
-The Goal of This Fork
-=====================
-To automatically adjust the fan speed based on the CPU temperature.
-
-Background
-==========
+## Background
 My old MacBook Pro has an overheating problem and for some reason the fans stay at 2000 RPM until the CPU temperature is over 100 Celsius. 
 
 This is a quick and dirty fork of the great smcFanController application. Instead of relying on user-defined favorites, it dynamically adjusts the fan speed based on the CPU temperature as follows:
@@ -17,4 +14,4 @@ This is a quick and dirty fork of the great smcFanController application. Instea
 75 C: 5500 RPM
 80 C: 6000 RPM
 
-The values can be customized in FanControl.h
+The values can be customized in FanControl.h. Use only at your own risk.
