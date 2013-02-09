@@ -48,9 +48,11 @@ OSStatus status;
 NSDictionary* machine_defaults;
 NSString *authpw;
 
-int rpm_multiplier = 0;
-float past_temp = kBaseTemp;
-
+#define LEAK_FACTOR   0.675
+float leaky_integrate(old_val, new_val)
+{
+    return old_val*LEAK_FACTOR + (1-LEAK_FACTOR)*new_val;
+}
 
 
 #pragma mark **Init-Methods**
@@ -109,7 +111,10 @@ float past_temp = kBaseTemp;
 	[pw setDelegate:self];
 	[pw registerForSleepWakeNotification];
 	[pw registerForPowerChange];
-	
+    
+    lastRpmWritten = kInvalidRpm;
+    smoothedTemp = 60; // Celsius
+    
 	//load defaults
 	
 	[DefaultsController setAppliesImmediately:NO];
@@ -216,7 +221,7 @@ float past_temp = kBaseTemp;
 		[autochange setEnabled:false];
 	}
 	[faqText replaceCharactersInRange:NSMakeRange(0,0) withRTF: [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"F.A.Q" ofType:@"rtf"]]];
-	[self apply_settings:nil controllerindex:0];
+	[self apply_settings:nil rpmValue:kDefaultRpm];
 	[[[[theMenu itemWithTag:1] submenu] itemAtIndex:[[defaults objectForKey:@"SelDefault"] intValue]] setState:NSOnState];
 	[[sliderCell dataCell] setControlSize:NSSmallControlSize];
 	[self changeMenu:nil];
@@ -227,7 +232,7 @@ float past_temp = kBaseTemp;
 
 	//release MachineDefaults class first call
 	//add timer for reading to RunLoop
-	_readTimer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(readFanData:) userInfo:nil repeats:YES];
+	_readTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(readFanData:) userInfo:nil repeats:YES];
 	[_readTimer fire];
 	//autoapply settings if valid
 	[self upgradeFavorites];
@@ -312,6 +317,34 @@ float past_temp = kBaseTemp;
 - (IBAction)favorite_selected:(id)sender {
 }
 
+- (int)calcRpm:(float)tempC:(int*)pRpm {
+    int doChangeSpeed = 0;
+    float newRpm;
+        
+    // calculate smoothed temperature
+    float newTemp = leaky_integrate(smoothedTemp, tempC);
+    smoothedTemp = newTemp;
+
+    //NSLog(@"curr temp:%f, smoothed:%f", tempC, newTemp);
+    // select rpm
+    if(newTemp < 50)
+        newRpm = 3500;
+    else if (newTemp < 55)
+        newRpm = 4000;
+    else if (newTemp < 60)
+        newRpm = 4500;
+    else if (newTemp < 65)
+        newRpm = 5000;
+    else
+        newRpm = 5600;
+
+    // only apply if the rpm is different from current
+    if (newRpm != lastRpmWritten)
+        doChangeSpeed = 1;
+
+    *pRpm = newRpm;
+    return doChangeSpeed;
+}
 
 //reads fan data and updates the gui
 -(void) readFanData:(NSTimer*)timer{
@@ -414,24 +447,14 @@ float past_temp = kBaseTemp;
 		
 	}
     
-    past_temp = past_temp * kPastTempRatio + c_temp * (1 - kPastTempRatio);
-    int expectedTemp = kBaseTemp + rpm_multiplier * kTempIncrement;
-    int new_multiplier = (int)((past_temp - kBaseTemp) / kTempIncrement);
-    if (new_multiplier < 0) {
-        new_multiplier = 0;
+    int newRpm;
+    int update_fans = [self calcRpm:c_temp:&newRpm];
+    
+    if (update_fans && (newRpm != kInvalidRpm)) {
+        NSLog(@"Setting fan to %d. Current temp is %f.\n", newRpm, c_temp);
+        [self apply_settings:nil rpmValue:newRpm];
     }
-    if (new_multiplier > kMaxMultiplier) {
-        new_multiplier = kMaxMultiplier;
-    }
-    if (past_temp < expectedTemp - kTempDecreaseLimiter) {
-        NSLog(@"Less: Multiplier %d ExpectedTemp %d NewTemp %0.2f NewMultiplier %d", rpm_multiplier, expectedTemp, past_temp, new_multiplier);
-        rpm_multiplier = new_multiplier;
-        [self apply_settings:nil controllerindex:rpm_multiplier];
-    } else if (past_temp > expectedTemp + kTempIncrement) {
-        NSLog(@"More: Multiplier %d ExpectedTemp %d NewTemp %0.2f NewMultiplier %d", rpm_multiplier, expectedTemp, past_temp, new_multiplier);
-        rpm_multiplier = new_multiplier;
-        [self apply_settings:nil controllerindex:rpm_multiplier];
-    }
+
     /*
 	if (c_temp > [[defaults objectForKey:@"MinTemp"] floatValue]) {
         if (current_fav != [[defaults objectForKey:@"SelMinTemp"] intValue]) {
@@ -466,13 +489,13 @@ float past_temp = kBaseTemp;
 
 //set the new fan settings
 
--(void)apply_settings:(id)sender controllerindex:(int)cIndex{
-    NSNumber *rpm = [NSNumber numberWithInt:(kBaseRpm + cIndex * kRpmIncrement)];
+-(void)apply_settings:(id)sender rpmValue:(int)rpm_val{
+    NSNumber *rpm = [NSNumber numberWithInt:(rpm_val)];
     NSLog(@"Fans changed to %d", rpm.intValue);
     [smcWrapper setKey_external:@"F0Mn" value:[rpm tohex]];
     [smcWrapper setKey_external:@"F1Mn" value:[rpm tohex]];
+    lastRpmWritten = rpm.intValue;
 }
-
 
 
 -(void)apply_quickselect:(id)sender{
@@ -570,6 +593,8 @@ float past_temp = kBaseTemp;
 #pragma mark **Power Watchdog-Methods**
 
 - (void)systemDidWakeFromSleep:(id)sender{
+    NSLog(@"Forcing fan update due to wake up from sleep.");
+    lastRpmWritten = kInvalidRpm;
 }
 
 
