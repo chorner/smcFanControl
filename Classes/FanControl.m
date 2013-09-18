@@ -472,10 +472,9 @@ float leaky_integrate(old_val, new_val)
     int update_fans = [self calcRpm:c_temp:&newRpm];
     
     if (update_fans && (newRpm != kInvalidRpm)) {
-        NSLog(@"Setting fan to %d. Current temp is %f.\n", newRpm, c_temp);
+        //NSLog(@"Setting fan to %d. Current temp is %f.\n", newRpm, c_temp);
         // Show Notification if temp more than 60!
         if(c_temp > 60){
-            NSLog(@"Its getting hot more than 60!");
             [self showNotification:nil];
         }
         [self apply_settings:nil rpmValue:newRpm];
@@ -503,6 +502,8 @@ float leaky_integrate(old_val, new_val)
 	[defaults synchronize];
 	[mainwindow close];
 	undo_dic=[NSDictionary dictionaryWithDictionary:[defaults dictionaryRepresentation]];
+    // Send saving notification
+    [self showNotificationSaving:nil];
 }
 
 
@@ -522,6 +523,21 @@ float leaky_integrate(old_val, new_val)
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 }
 
+- (IBAction)showNotificationSaving:(id)sender{
+    NSUserNotification *notification = [[NSUserNotification alloc] init];
+    notification.title = @"Preference has been saved!";
+    notification.informativeText = @"Vik, your current setting has been saved.";
+    notification.soundName = NSUserNotificationDefaultSoundName;
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+}
+
+- (IBAction)showNotificationClose:(id)sender{
+    NSUserNotification *notification = [[NSUserNotification alloc] init];
+    notification.title = @"Fan control disable!";
+    notification.informativeText = @"Vik, your fan control has been disabled.";
+    notification.soundName = NSUserNotificationDefaultSoundName;
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+}
 
 //set the new fan settings
 
@@ -562,6 +578,7 @@ float leaky_integrate(old_val, new_val)
 	//[s_menus release];
 	//[theMenu release];
 	[[NSApplication sharedApplication] terminate:self];
+    
 }
 
 

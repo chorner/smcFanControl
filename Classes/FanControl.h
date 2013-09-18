@@ -119,6 +119,8 @@
 
 - (IBAction)closePreferences:(id)sender;
 - (IBAction)showNotification:(id)sender;
+- (IBAction)showNotificationSaving:(id)sender;
+- (IBAction)showNotificationClose:(id)sender;
 - (IBAction)savePreferences:(id)sender;
 - (IBAction)updateCheck:(id)sender;
 
