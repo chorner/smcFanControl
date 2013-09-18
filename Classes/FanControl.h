@@ -38,7 +38,7 @@
 #define kMenuBarHeight				22
 
 #define kInvalidRpm    -1
-#define kDefaultRpm    5000
+#define kDefaultRpm    6000
 
 @interface FanControl : NSObject
 
@@ -118,6 +118,7 @@
 - (IBAction)visitHomepage:(id)sender;
 
 - (IBAction)closePreferences:(id)sender;
+- (IBAction)showNotification:(id)sender;
 - (IBAction)savePreferences:(id)sender;
 - (IBAction)updateCheck:(id)sender;
 

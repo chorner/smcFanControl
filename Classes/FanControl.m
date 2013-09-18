@@ -327,16 +327,37 @@ float leaky_integrate(old_val, new_val)
 
     //NSLog(@"curr temp:%f, smoothed:%f", tempC, newTemp);
     // select rpm
-    if(newTemp < 50)
+    if(newTemp < 46)
+        newRpm = 3000;
+    else if (newTemp < 48)
+        newRpm = 3100;
+    else if (newTemp < 50)
+        newRpm = 3200;
+    else if (newTemp < 52)
+        newRpm = 3300;
+    else if (newTemp < 54)
+        newRpm = 3400;
+    else if (newTemp < 56)
         newRpm = 3500;
-    else if (newTemp < 55)
-        newRpm = 4000;
+    else if (newTemp < 58)
+        newRpm = 3600;
     else if (newTemp < 60)
+        newRpm = 3700;
+    else if (newTemp < 62)
+        newRpm = 3800;
+    else if (newTemp < 64)
+        newRpm = 3900;
+    else if (newTemp < 66)
+        newRpm = 4000;
+    // Less be more aggressive
+    else if (newTemp < 68)
         newRpm = 4500;
-    else if (newTemp < 65)
+    else if (newTemp < 70)
         newRpm = 5000;
+    else if (newTemp < 72)
+        newRpm = 5800;
     else
-        newRpm = 5600;
+        newRpm = 6000;
 
     // only apply if the rpm is different from current
     if (newRpm != lastRpmWritten)
@@ -452,6 +473,11 @@ float leaky_integrate(old_val, new_val)
     
     if (update_fans && (newRpm != kInvalidRpm)) {
         NSLog(@"Setting fan to %d. Current temp is %f.\n", newRpm, c_temp);
+        // Show Notification if temp more than 60!
+        if(c_temp > 60){
+            NSLog(@"Its getting hot more than 60!");
+            [self showNotification:nil];
+        }
         [self apply_settings:nil rpmValue:newRpm];
     }
 
@@ -486,12 +512,23 @@ float leaky_integrate(old_val, new_val)
 	[DefaultsController revert:sender];
 }
 
+// Send notification if temp more than 65 C
+
+- (IBAction)showNotification:(id)sender{
+    NSUserNotification *notification = [[NSUserNotification alloc] init];
+    notification.title = @"Less critical temperature!";
+    notification.informativeText = @"Vik, current Mac temperature is more than 60 C. Please take an action!";
+    notification.soundName = NSUserNotificationDefaultSoundName;
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+}
+
 
 //set the new fan settings
 
 -(void)apply_settings:(id)sender rpmValue:(int)rpm_val{
     NSNumber *rpm = [NSNumber numberWithInt:(rpm_val)];
     NSLog(@"Fans changed to %d", rpm.intValue);
+    //[[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     [smcWrapper setKey_external:@"F0Mn" value:[rpm tohex]];
     [smcWrapper setKey_external:@"F1Mn" value:[rpm tohex]];
     lastRpmWritten = rpm.intValue;
