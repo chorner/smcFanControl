@@ -48,6 +48,20 @@ OSStatus status;
 NSDictionary* machine_defaults;
 NSString *authpw;
 
+//userGetFullName = NSUserName();
+
+// Define messages for notifications
+NSString *unTitleForSix = @"Current cpu temp is 60 C!";
+NSString *unTextForSix = @"%@, your current cpu temperature is more than 60 degrees!", *NSFullUserName();
+NSString *unTitleForSeven = @"Current cpu temp is 50 C!";
+NSString *unTextForSeven = @"%@, your current cpu temperature is more than 70 degrees!", *NSFullUserName();
+NSString *unTitleForSevenFive = @"Current cpu temp is 75 C!";
+NSString *unTextForSevenFive = @"%@ ,your current cpu temperature is more than 75 degrees!", *NSFullUserName();
+NSString *unTitleForEight = @"Current cpu temp is 80 C!";
+NSString *unTextForEight = @"%@ ,your current cpu temperature is more than 80 degrees!", *NSFullUserName();
+NSString *unTitleCriticalHot = @"Current cpu temp is hot!";
+NSString *unTextCriticalHot = @"%@ ,attention! Your cpu temperature is very hot!", *NSFullUserName();
+
 #define LEAK_FACTOR   0.675
 float leaky_integrate(old_val, new_val)
 {
@@ -105,7 +119,9 @@ float leaky_integrate(old_val, new_val)
 }
 
 -(void) awakeFromNib {
-		
+  
+  
+  
 	s_sed = nil;
 	pw=[[Power alloc] init];
 	[pw setDelegate:self];
@@ -372,8 +388,10 @@ float leaky_integrate(old_val, new_val)
 	
 	NSString *temp;
 	NSString *fan;
+  
+  // Initialize User Notify Class
+  userNotify = [[[FanUserNotify alloc] init] autorelease];
 
-	
 	//on init handling
 	if (s_sed==nil) {
 		return;
@@ -472,27 +490,19 @@ float leaky_integrate(old_val, new_val)
     int update_fans = [self calcRpm:c_temp:&newRpm];
     
     if (update_fans && (newRpm != kInvalidRpm)) {
-        //NSLog(@"Setting fan to %d. Current temp is %f.\n", newRpm, c_temp);
-        // Show Notification if temp more than 60!
-        if(c_temp > 60){
-            [self showNotification:nil];
-        }
-        [self apply_settings:nil rpmValue:newRpm];
+      [self apply_settings:nil rpmValue:newRpm];
+      if(c_temp >= 60 && c_temp < 70){
+        [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForSix unText: unTextForSix];
+      }else if(c_temp >= 70 && c_temp < 75){
+        [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForSeven unText: unTextForSeven];
+      }else if(c_temp >= 75 && c_temp < 80){
+        [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForSevenFive unText: unTextForSevenFive];
+      }else if(c_temp >= 80 && c_temp < 85){
+        [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForEight unText: unTextForEight];
+      }else if(c_temp > 85){
+        [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleCriticalHot unText: unTextCriticalHot];
+      }
     }
-
-    /*
-	if (c_temp > [[defaults objectForKey:@"MinTemp"] floatValue]) {
-        if (current_fav != [[defaults objectForKey:@"SelMinTemp"] intValue]) {
-            [self apply_settings:nil controllerindex:[[defaults objectForKey:@"SelMinTemp"] intValue]];
-            current_fav = [[defaults objectForKey:@"SelMinTemp"] intValue];
-        }
-    } else {
-        if (current_fav == [[defaults objectForKey:@"SelMinTemp"] intValue]) {
-            [self apply_settings:nil controllerindex:default_fav];
-            current_fav = default_fav;
-        }
-    }
-     */
 }
 
 
@@ -502,8 +512,6 @@ float leaky_integrate(old_val, new_val)
 	[defaults synchronize];
 	[mainwindow close];
 	undo_dic=[NSDictionary dictionaryWithDictionary:[defaults dictionaryRepresentation]];
-    // Send saving notification
-    [self showNotificationSaving:nil];
 }
 
 
@@ -513,38 +521,13 @@ float leaky_integrate(old_val, new_val)
 	[DefaultsController revert:sender];
 }
 
-// Send notification if temp more than 65 C
 
-- (IBAction)showNotification:(id)sender{
-    NSUserNotification *notification = [[NSUserNotification alloc] init];
-    notification.title = @"Less critical temperature!";
-    notification.informativeText = @"Vik, current Mac temperature is more than 60 C. Please take an action!";
-    notification.soundName = NSUserNotificationDefaultSoundName;
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-}
-
-- (IBAction)showNotificationSaving:(id)sender{
-    NSUserNotification *notification = [[NSUserNotification alloc] init];
-    notification.title = @"Preference has been saved!";
-    notification.informativeText = @"Vik, your current setting has been saved.";
-    notification.soundName = NSUserNotificationDefaultSoundName;
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-}
-
-- (IBAction)showNotificationClose:(id)sender{
-    NSUserNotification *notification = [[NSUserNotification alloc] init];
-    notification.title = @"Fan control disable!";
-    notification.informativeText = @"Vik, your fan control has been disabled.";
-    notification.soundName = NSUserNotificationDefaultSoundName;
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-}
 
 //set the new fan settings
-
 -(void)apply_settings:(id)sender rpmValue:(int)rpm_val{
     NSNumber *rpm = [NSNumber numberWithInt:(rpm_val)];
     NSLog(@"Fans changed to %d", rpm.intValue);
-    //[[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
+    NSLog(@"%@ Test names!", unTextForSix);
     [smcWrapper setKey_external:@"F0Mn" value:[rpm tohex]];
     [smcWrapper setKey_external:@"F1Mn" value:[rpm tohex]];
     lastRpmWritten = rpm.intValue;
@@ -573,6 +556,7 @@ float leaky_integrate(old_val, new_val)
 	[pw release];
 	[menu_image release];
 	[menu_image_alt release];
+    //[userNotify release];
 	//[mdefaults release];
 	//[statusItem release];
 	//[s_menus release];
@@ -647,15 +631,18 @@ float leaky_integrate(old_val, new_val)
 #pragma mark **Power Watchdog-Methods**
 
 - (void)systemDidWakeFromSleep:(id)sender{
-    NSLog(@"Forcing fan update due to wake up from sleep.");
+    //NSLog(@"Forcing fan update due to wake up from sleep.");
     lastRpmWritten = kInvalidRpm;
+  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Your system wake!" unText:@"MacBook Pro wake from sleep and fan has been synced!"];
 }
 
 
 - (void)powerChangeToBattery:(id)sender{
+  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Power source changed!" unText:@"MacBook Pro power source has been changed to battery!"];
 }
 
 - (void)powerChangeToAC:(id)sender{
+  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Power source changed!" unText:@"MacBook Pro power source has been changed to AC!"];
 }
 
 - (void)powerChangeToACLoading:(id)sender{

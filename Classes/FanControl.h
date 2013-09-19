@@ -27,6 +27,7 @@
 #import <MachineDefaults.h>
 
 #import <Power.h>
+#import <FanUserNotify.h>
 #include <mach/mach_port.h>
 #include <mach/mach_interface.h>
 #include <mach/mach_init.h>
@@ -94,6 +95,9 @@
 	NSTimer *_readTimer;
 	
 	Power *pw;
+  
+  // Fan notificator initializer
+  FanUserNotify *userNotify;
 	
 	IBOutlet id FavoritesController;
 	IBOutlet id FanController;
@@ -118,9 +122,6 @@
 - (IBAction)visitHomepage:(id)sender;
 
 - (IBAction)closePreferences:(id)sender;
-- (IBAction)showNotification:(id)sender;
-- (IBAction)showNotificationSaving:(id)sender;
-- (IBAction)showNotificationClose:(id)sender;
 - (IBAction)savePreferences:(id)sender;
 - (IBAction)updateCheck:(id)sender;
 
