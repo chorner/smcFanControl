@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string>smcfancontrol_v2</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.vikewoods.smcFanControl2</string>
+	<string>com.github.smcFanControl2</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

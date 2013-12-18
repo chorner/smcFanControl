@@ -16,7 +16,6 @@
   notification.informativeText = a_text;
   notification.actionButtonTitle = @"Close";
   notification.hasActionButton = YES;
-  notification.subtitle = @"https://vikewoods.com";
   notification.soundName = NSUserNotificationDefaultSoundName;
   [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 }
