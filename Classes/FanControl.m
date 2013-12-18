@@ -51,16 +51,16 @@ NSString *authpw;
 //userGetFullName = NSUserName();
 
 // Define messages for notifications
-NSString *unTitleForSix = @"Current cpu temp is 60 C!";
-NSString *unTextForSix = @"%@, your current cpu temperature is more than 60 degrees!", *NSFullUserName();
-NSString *unTitleForSeven = @"Current cpu temp is 50 C!";
-NSString *unTextForSeven = @"%@, your current cpu temperature is more than 70 degrees!", *NSFullUserName();
-NSString *unTitleForSevenFive = @"Current cpu temp is 75 C!";
-NSString *unTextForSevenFive = @"%@ ,your current cpu temperature is more than 75 degrees!", *NSFullUserName();
-NSString *unTitleForEight = @"Current cpu temp is 80 C!";
-NSString *unTextForEight = @"%@ ,your current cpu temperature is more than 80 degrees!", *NSFullUserName();
-NSString *unTitleCriticalHot = @"Current cpu temp is hot!";
-NSString *unTextCriticalHot = @"%@ ,attention! Your cpu temperature is very hot!", *NSFullUserName();
+NSString *unTitleForSix = @"CPU temperature is 60+ C";
+NSString *unTextForSix = @"CPU temperature is 60+ C";
+NSString *unTitleForSeven = @"CPU temperature is 70+ C";
+NSString *unTextForSeven = @"CPU temperature is 70+ C";
+NSString *unTitleForSevenFive = @"CPU temperature is 75+ C";
+NSString *unTextForSevenFive = @"CPU temperature is 75+ C";
+NSString *unTitleForEight = @"CPU temperature is 80+ C";
+NSString *unTextForEight = @"CPU temperature is 80+ C";
+NSString *unTitleCriticalHot = @"CPU temperature is 85+ C";
+NSString *unTextCriticalHot = @"CPU temperature is 85+ C";
 
 #define LEAK_FACTOR   0.675
 float leaky_integrate(old_val, new_val)
@@ -343,7 +343,11 @@ float leaky_integrate(old_val, new_val)
 
     //NSLog(@"curr temp:%f, smoothed:%f", tempC, newTemp);
     // select rpm
-    if(newTemp < 46)
+    if(newTemp < 42)
+        newRpm = 2600;
+    else if (newTemp < 44)
+        newRpm = 2800;
+    else if (newTemp < 46)
         newRpm = 3000;
     else if (newTemp < 48)
         newRpm = 3100;
@@ -365,7 +369,7 @@ float leaky_integrate(old_val, new_val)
         newRpm = 3900;
     else if (newTemp < 66)
         newRpm = 4000;
-    // Less be more aggressive
+    // Let's be more aggressive
     else if (newTemp < 68)
         newRpm = 4500;
     else if (newTemp < 70)
@@ -491,9 +495,7 @@ float leaky_integrate(old_val, new_val)
     
     if (update_fans && (newRpm != kInvalidRpm)) {
       [self apply_settings:nil rpmValue:newRpm];
-      if(c_temp >= 60 && c_temp < 70){
-        [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForSix unText: unTextForSix];
-      }else if(c_temp >= 70 && c_temp < 75){
+      if(c_temp >= 70 && c_temp < 75){
         [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForSeven unText: unTextForSeven];
       }else if(c_temp >= 75 && c_temp < 80){
         [userNotify pushNotificationToUserWithParams:nil unTitle: unTitleForSevenFive unText: unTextForSevenFive];
@@ -527,7 +529,6 @@ float leaky_integrate(old_val, new_val)
 -(void)apply_settings:(id)sender rpmValue:(int)rpm_val{
     NSNumber *rpm = [NSNumber numberWithInt:(rpm_val)];
     NSLog(@"Fans changed to %d", rpm.intValue);
-    NSLog(@"%@ Test names!", unTextForSix);
     [smcWrapper setKey_external:@"F0Mn" value:[rpm tohex]];
     [smcWrapper setKey_external:@"F1Mn" value:[rpm tohex]];
     lastRpmWritten = rpm.intValue;
