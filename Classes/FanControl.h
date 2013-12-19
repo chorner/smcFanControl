@@ -138,7 +138,7 @@
 - (void)apply_quickselect:(id)sender;
 - (void)apply_settings:(id)sender rpmValue:(int)rpm_val;
 + (void)setRights;
-- (int)calcRpm:(float)tempC:(int*)pRpm;
+- (int)calcRpm:(float)tempC rpm:(int*)pRpm;
 - (void) syncBinder:(Boolean)bind;
 - (IBAction) changeMenu:(id)sender;
 - (IBAction)menuSelect:(id)sender;

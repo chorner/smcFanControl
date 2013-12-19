@@ -333,7 +333,7 @@ float leaky_integrate(old_val, new_val)
 - (IBAction)favorite_selected:(id)sender {
 }
 
-- (int)calcRpm:(float)tempC:(int*)pRpm {
+- (int)calcRpm:(float)tempC rpm:(int*)pRpm {
     int doChangeSpeed = 0;
     float newRpm;
         
@@ -491,7 +491,7 @@ float leaky_integrate(old_val, new_val)
 	}
     
     int newRpm;
-    int update_fans = [self calcRpm:c_temp:&newRpm];
+    int update_fans = [self calcRpm:c_temp rpm:&newRpm];
     
     if (update_fans && (newRpm != kInvalidRpm)) {
       [self apply_settings:nil rpmValue:newRpm];
@@ -634,17 +634,17 @@ float leaky_integrate(old_val, new_val)
 - (void)systemDidWakeFromSleep:(id)sender{
     //NSLog(@"Forcing fan update due to wake up from sleep.");
     lastRpmWritten = kInvalidRpm;
-  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Your system wake!" unText:@"MacBook Pro wake from sleep and fan has been synced!"];
+//  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Your system wake!" unText:@"MacBook Pro wake from sleep and fan has been synced!"];
 }
 
 
-- (void)powerChangeToBattery:(id)sender{
-  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Power source changed!" unText:@"MacBook Pro power source has been changed to battery!"];
-}
-
-- (void)powerChangeToAC:(id)sender{
-  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Power source changed!" unText:@"MacBook Pro power source has been changed to AC!"];
-}
+//- (void)powerChangeToBattery:(id)sender{
+//  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Power source changed!" unText:@"MacBook Pro power source has been changed to battery!"];
+//}
+//
+//- (void)powerChangeToAC:(id)sender{
+//  [userNotify pushNotificationToUserWithParams:nil unTitle:@"Power source changed!" unText:@"MacBook Pro power source has been changed to AC!"];
+//}
 
 - (void)powerChangeToACLoading:(id)sender{
 }
